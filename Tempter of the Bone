@@ -1,0 +1,76 @@
+#include<stdio.h>
+#include<string.h>
+#include<algorithm>
+using namespace std;
+int n,m,t,book[10][10];
+int ne[4][2]={{0,1},{1,0},{-1,0},{0,-1}};
+char map[10][10];
+int x1,x2,y1,y2,flag; 
+void dfs(int x,int y,int step)
+{
+    if(flag) 
+     return ;
+     if(x==x2&&y==y2&&t==step)
+     {
+         flag=1;
+         return ;
+     }
+     int t1=t-step-abs(x-x2)-abs(y-y2);
+     if(t1<0||t1&1)
+        return ;
+    for(int i=0;i<4;i++)
+        {
+            int tx=x+ne[i][0];
+            int ty=y+ne[i][1];
+            if(tx<0||tx>=n||ty<0||ty>=m)
+               continue;
+            if(!book[tx][ty]&&map[tx][ty]!='X')
+            {
+                book[tx][ty]=1;
+                dfs(tx,ty,step+1);
+                if(flag)
+                return ;
+                 book[tx][ty]=0;
+            }
+        }
+        return ;
+}  
+int main()
+{
+    while(~scanf("%d%d%d",&n,&m,&t)&&(n||m||t))
+    {
+        int i,j;
+        int sum=0;flag=0;
+        memset(book,0,sizeof(book));
+        for(i=0;i<n;i++)
+         scanf("%s",map[i]);
+         for(i=0;i<n;i++)
+         {
+         for(j=0;j<m;j++)
+         {
+             if(map[i][j]=='S')
+             {
+               x1=i;
+                y1=j;
+             }
+             if(map[i][j]=='D')
+             {
+                 x2=i;
+                 y2=j;
+             }
+             if(map[i][j]=='X')
+                sum++;
+            }
+        }
+        if(t>n*m-sum-1)
+        {
+            printf("NO\n");
+            continue;
+        }
+        book[x1][y1]=1;
+        dfs(x1,y1,0);
+        if(flag==1)
+          printf("YES\n");
+        else
+          printf("NO\n");
+    }}
