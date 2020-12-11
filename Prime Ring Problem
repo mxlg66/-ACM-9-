@@ -1,0 +1,57 @@
+#include<stdio.h> 
+#include<string.h>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+int n;
+bool prime[40];
+void Prime()  //预处理1~40之间的数是否为质数
+{
+    for(int i = 3;i <= 40;++i)
+    {
+        bool flag = 0;
+        for(int j = 2;j<=sqrt(i);j==2?++j:j+=2)
+          if(i%j==0) {flag = 1;break;}
+        flag==0?prime[i]=1:prime[i]=0; //1即为质数0则否
+    }
+}
+int tail[40]; //列表
+void print()  //打印列表
+{
+    for(int i =1;i<=n;++i)
+        printf(i==n?"%d\n":"%d ",tail[i]);
+}
+bool book[40]; //标记
+void dfs(int x)
+{
+    if(x==n)
+       {   //最后再判断最后一个数与第一个数相加是否为质数
+           if(prime[tail[n]+tail[1]]) print();
+           return;
+       }
+    for(int i = 2;i<=n;++i)
+    {
+        if(prime[i+tail[x]]&&book[i]==0)//dfs
+        {
+            tail[x+1] = i;
+            book[i] = 1;
+            dfs(x+1);
+            book[i] = 0;
+        }
+    }
+}
+int main()
+{
+    int cas = 0;
+    Prime();
+    tail[1] = 1; book[1] = 1;
+    while(~scanf("%d",&n))
+    {
+        memset(book,0,sizeof(book));
+        printf("Case %d:\n",++cas);
+        if(n==1) printf("1\n");
+        else if(n%2==1) ; //如果是奇数，实现不了
+        else dfs(1);
+        putchar('\n');
+    }
+}
